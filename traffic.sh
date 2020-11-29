@@ -24,20 +24,20 @@ cd "$output_directory" || exit 1
 echo "$repositories" | tr ' ' '\n' | while read -r repository
 do
 	echo "$metrics" | tr ' ' '\n' | while read -r metric
-    do
-	    response=$(curl --silent \
-	    	--header "Authorization: token $personal_access_token" \
-	    	--header "Accept: application/vnd.github.v3+json" \
-	    	"$api_url"/repos/"$repository"/traffic/"$metric"
-	    )
+	do
+		response=$(curl --silent \
+			--header "Authorization: token $personal_access_token" \
+			--header "Accept: application/vnd.github.v3+json" \
+			"$api_url"/repos/"$repository"/traffic/"$metric"
+		)
 
-	    directory=$(echo "$repository" | sed 's/\//_/')
+		directory=$(echo "$repository" | sed 's/\//_/')
 		metric=$(echo "$metric" | sed 's/\//_/')
-	    [ ! -d "$directory" ] && mkdir "$directory"
-	    echo "$response" > "$directory"/"$timestamp"_"$metric".json
+		[ ! -d "$directory" ] && mkdir "$directory"
+		echo "$response" > "$directory"/"$timestamp"_"$metric".json
 
-	    printf "Extracted metric %s from %s\n" "$metric" "$repository"
-    done
+		printf "Extracted metric %s from %s\n" "$metric" "$repository"
+	done
 done
 
 cd ..
