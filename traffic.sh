@@ -17,6 +17,9 @@ output_directory="data"
 
 timestamp=$(date -u +"%Y-%m-%d %H_%M_%S")
 repositories=$(awk '$1=$1' FS=" " OFS="/" "$input_file")
+
+[ -z "$repositories" ] && exit 0
+
 metrics="views clones popular/referrers popular/paths"
 
 cd "$output_directory" || exit 1
