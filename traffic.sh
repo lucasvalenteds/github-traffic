@@ -16,22 +16,27 @@ output_directory="data"
 
 timestamp=$(date -u +"%Y-%m-%d %H_%M_%S")
 repositories=$(awk '$1=$1' FS=" " OFS="/" "$input_file")
+metrics="views clones popular/referrers popular/paths"
 
 cd "$output_directory" || exit 1
 
 echo "$repositories" | tr ' ' '\n' | while read -r repository
 do
-	response=$(curl --silent \
-		--header "Authorization: token $personal_access_token" \
-		--header "Accept: application/vnd.github.v3+json" \
-		https://api.github.com/repos/"$repository"/traffic/views
-	)
+	echo "$metrics" | tr ' ' '\n' | while read -r metric
+    do
+	    response=$(curl --silent \
+	    	--header "Authorization: token $personal_access_token" \
+	    	--header "Accept: application/vnd.github.v3+json" \
+	    	https://api.github.com/repos/"$repository"/traffic/"$metric"
+	    )
 
-	directory=$(echo "$repository" | sed 's/\//_/')
-	[ ! -d "$directory" ] && mkdir "$directory"
-	echo "$response" > "$directory"/"$timestamp".json
+	    directory=$(echo "$repository" | sed 's/\//_/')
+		metric=$(echo "$metric" | sed 's/\//_/')
+	    [ ! -d "$directory" ] && mkdir "$directory"
+	    echo "$response" > "$directory"/"$timestamp"_"$metric".json
 
-	printf "%s\n" "$repository"
+	    printf "Extracted metric %s from %s\n" "$metric" "$repository"
+    done
 done
 
 cd ..
