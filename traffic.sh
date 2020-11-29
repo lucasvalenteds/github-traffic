@@ -1,5 +1,6 @@
 #!/bin/sh
 
+api_url="${API_URL:=https://api.github.com}"
 personal_access_token="$1"
 if [ -z "$personal_access_token" ]
 then
@@ -27,7 +28,7 @@ do
 	    response=$(curl --silent \
 	    	--header "Authorization: token $personal_access_token" \
 	    	--header "Accept: application/vnd.github.v3+json" \
-	    	https://api.github.com/repos/"$repository"/traffic/"$metric"
+	    	"$api_url"/repos/"$repository"/traffic/"$metric"
 	    )
 
 	    directory=$(echo "$repository" | sed 's/\//_/')
