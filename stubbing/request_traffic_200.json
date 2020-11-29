@@ -1,0 +1,15 @@
+{
+    "request": {
+        "method": "GET",
+        "urlPathPattern": "/repos/.*/.*/traffic/.*"
+    },
+    "response": {
+        "status": 200,
+        "headers" : {
+            "Content-Type" : "application/json"
+        },
+        "body": {
+            "success": "ok"
+        }
+    }
+}
